@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,23 @@
             --text-sub: #94a3b8;
             --correct-color: #22c55e;
             --wrong-color: #ef4444;
+            --inner-bg: rgba(0, 0, 0, 0.2);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --accent-color: #0284c7;
+            --accent-hover: #0369a1;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --correct-color: #16a34a;
+            --wrong-color: #dc2626;
+            --inner-bg: #f8fafc;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --modal-bg: rgba(15, 23, 42, 0.4);
         }
 
         * {
@@ -21,6 +38,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
@@ -36,11 +54,33 @@
             background-color: var(--card-bg);
             padding: 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 420px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            position: relative;
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 0.4rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-toggle-btn:hover {
+            opacity: 0.8;
         }
 
         h1 {
@@ -48,12 +88,44 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--accent-color);
+            margin-top: 0.5rem;
         }
 
         .instruction {
             font-size: 0.875rem;
             color: var(--text-sub);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .time-select-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--inner-bg);
+            padding: 0.35rem;
+            border-radius: 12px;
+        }
+
+        .time-btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-sub);
+            cursor: pointer;
+        }
+
+        .time-btn:hover:not(:disabled) {
+            color: var(--text-main);
+        }
+
+        .time-btn.active {
+            background-color: var(--accent-color);
+            color: #ffffff;
         }
 
         .stats-grid {
@@ -64,10 +136,10 @@
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--inner-bg);
             padding: 1rem;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
         }
 
         .stat-label {
@@ -88,31 +160,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--inner-bg);
             border-radius: 16px;
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
             border: 2px solid transparent;
-            transition: all 0.2s ease;
         }
 
         #targetChar {
             font-size: 4rem;
             font-weight: 800;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            color: var(--text-main);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
         }
 
-        /* 입력 피드백 애니메이션 효과 */
         .display-area.correct {
             border-color: var(--correct-color);
-            background: rgba(34, 197, 94, 0.1);
+            background: rgba(34, 197, 94, 0.15);
         }
 
         .display-area.wrong {
             border-color: var(--wrong-color);
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.15);
             animation: shake 0.2s ease-in-out;
         }
 
@@ -135,12 +205,11 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         #startButton {
             background-color: var(--accent-color);
-            color: #0f172a;
+            color: #ffffff;
         }
 
         #startButton:hover:not(:disabled) {
@@ -149,12 +218,13 @@
         }
 
         #resetButton {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--inner-bg);
             color: var(--text-main);
+            border: 1px solid var(--card-border);
         }
 
         #resetButton:hover:not(:disabled) {
-            background-color: rgba(255, 255, 255, 0.2);
+            opacity: 0.8;
             transform: translateY(-2px);
         }
 
@@ -170,13 +240,80 @@
             height: 1.25rem;
             color: var(--text-sub);
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            width: 90%;
+            max-width: 320px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            color: var(--text-sub);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
 
     <div class="game-container">
+        <!-- 영문 테마 토글 버튼 -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+            <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
+        </button>
+
         <h1>타자 속도 측정</h1>
-        <p class="instruction">화면에 표시되는 문자를 빠르게 입력하세요 (대소문자 구분)</p>
+        <p class="instruction">화면에 표시되는 문자를 빠르게 입력하세요<br>(대소문자 구분)</p>
+
+        <!-- 영문 시간 단위(s) 버튼 -->
+        <div class="time-select-group">
+            <button class="time-btn" onclick="selectTime(10)">10s</button>
+            <button class="time-btn active" onclick="selectTime(20)">20s</button>
+            <button class="time-btn" onclick="selectTime(30)">30s</button>
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card">
@@ -201,7 +338,16 @@
         <div id="statusMessage">시작 버튼을 눌러주세요</div>
     </div>
 
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-card">
+            <div class="modal-title">게임 종료!</div>
+            <div class="modal-score"><span id="finalScore">0</span>점</div>
+            <button class="modal-btn" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
     <script>
+        let selectedTime = 20;
         let score = 0;
         let timeLeft = 20;
         let gameInterval = null;
@@ -213,6 +359,45 @@
         const displayArea = document.getElementById('displayArea');
         const startButton = document.getElementById('startButton');
         const statusMessage = document.getElementById('statusMessage');
+        const resultModal = document.getElementById('resultModal');
+        const finalScoreElement = document.getElementById('finalScore');
+        const timeButtons = document.querySelectorAll('.time-btn');
+
+        function toggleTheme() {
+            const htmlTag = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            if (htmlTag.getAttribute('data-theme') === 'dark') {
+                htmlTag.setAttribute('data-theme', 'light');
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Dark';
+            } else {
+                htmlTag.setAttribute('data-theme', 'dark');
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Light';
+            }
+        }
+
+        function selectTime(seconds) {
+            if (isGameRunning) return;
+
+            selectedTime = seconds;
+            timeLeft = seconds;
+            timerElement.innerText = `${timeLeft}s`;
+
+            timeButtons.forEach(btn => {
+                if (parseInt(btn.innerText) === seconds) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function setTimeButtonsDisabled(disabled) {
+            timeButtons.forEach(btn => btn.disabled = disabled);
+        }
 
         function getRandomChar() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -225,7 +410,7 @@
 
         function triggerFeedback(type) {
             displayArea.classList.remove('correct', 'wrong');
-            void displayArea.offsetWidth; // Reflow 발생시켜 애니메이션 리셋
+            void displayArea.offsetWidth;
             displayArea.classList.add(type);
             
             setTimeout(() => {
@@ -234,7 +419,6 @@
         }
 
         function checkInput(event) {
-            // 시스템 단축키 및 기능키 제외
             if (event.key.length > 1) return;
 
             const inputChar = event.key;
@@ -243,7 +427,7 @@
                 score += 10;
                 triggerFeedback('correct');
             } else {
-                score = Math.max(0, score - 5); // 점수가 음수로 내려가지 않도록 제어
+                score = Math.max(0, score - 5);
                 triggerFeedback('wrong');
             }
 
@@ -266,21 +450,32 @@
             
             isGameRunning = false;
             startButton.disabled = false;
+            setTimeButtonsDisabled(false);
             targetCharElement.innerText = '-';
-            statusMessage.innerText = `게임 종료! 최종 점수: ${score}점`;
+            statusMessage.innerText = '';
+
+            finalScoreElement.innerText = score;
+            resultModal.classList.add('active');
+        }
+
+        function closeModal() {
+            resultModal.classList.remove('active');
         }
 
         function startGame() {
             if (isGameRunning) return;
             
+            closeModal();
             isGameRunning = true;
             startButton.disabled = true;
+            setTimeButtonsDisabled(true);
+            
             score = 0;
-            timeLeft = 20;
+            timeLeft = selectedTime;
             
             scoreElement.innerText = score;
             timerElement.innerText = `${timeLeft}s`;
-            statusMessage.innerText = '키보드로 문자를 입력하세요!';
+            statusMessage.innerText = '';
             
             setNewTargetChar();
 
@@ -291,14 +486,17 @@
         function resetGame() {
             clearInterval(gameInterval);
             document.removeEventListener('keydown', checkInput);
+            closeModal();
             
             isGameRunning = false;
             startButton.disabled = false;
+            setTimeButtonsDisabled(false);
+            
             score = 0;
-            timeLeft = 20;
+            timeLeft = selectedTime;
             
             scoreElement.innerText = '0';
-            timerElement.innerText = '20s';
+            timerElement.innerText = `${timeLeft}s`;
             targetCharElement.innerText = '-';
             statusMessage.innerText = '시작 버튼을 눌러주세요';
         }
